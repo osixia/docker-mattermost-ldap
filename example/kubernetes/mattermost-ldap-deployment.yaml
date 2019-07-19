@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mattermost-ldap
+  labels:
+    app: mattermost-ldap
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: mattermost-ldap
+  template:
+    metadata:
+      labels:
+        app: mattermost-ldap
+    spec:
+      initContainers:
+        - name: mattermost-ldap-init
+          image: osixia/mattermost-ldap:1.0.0
+          args: ["--copy-service", "-p"] # do not run process
+          volumeMounts:
+            - name: container-run-volume
+              mountPath: /container/run
+          env:
+            - name: MATTERMOST_LDAP_REDIRECT_URI
+              value: "https://mattermost.example.com/signup/gitlab/complete"
+            - name: MATTERMOST_LDAP_DATE_TIMEZONE
+              value: "Europe/Paris"
+            - name: MATTERMOST_LDAP_OAUTH_CLIENT_ID
+              value: "4fc0e4df4158faebf31623bf226e1aed66ec3d66ac7cd3a4effb9cb05eaca9dd"
+            - name: MATTERMOST_LDAP_OAUTH_CLIENT_SECRET
+              value: "5c91081bd149095088bfdff7e4ac519b671912f4014b03a1d2ce19cd6b3271bf"
+            - name: MATTERMOST_LDAP_OAUTH_GRANT_TYPE
+              value: "authorization_code"
+            - name: MATTERMOST_LDAP_OAUTH_SCOPE
+              value: "api"
+            - name: MATTERMOST_LDAP_LDAP_HOST
+              value: "openldap"
+            - name: MATTERMOST_LDAP_LDAP_PORT
+              value: "389"
+            - name: MATTERMOST_LDAP_LDAP_VERSION
+              value: "3"
+            - name: MATTERMOST_LDAP_LDAP_SEARCH_ATTRIBUTE
+              value: "uid"
+            - name: MATTERMOST_LDAP_LDAP_BASE_DN
+              value: "ou=Users,dc=osixia,dc=net"
+            - name: MATTERMOST_LDAP_LDAP_FILTER # /!\ & escaped due to sed replacement
+              value: "memberOf=cn=Mattermost,ou=Groups,dc=example,dc=org"
+            - name: MATTERMOST_LDAP_LDAP_BIND_DN
+              value: "cn=admin,dc=example,dc=org"
+            - name: MATTERMOST_LDAP_LDAP_BIND_PASSWORD
+              value: "password"
+            - name: MATTERMOST_LDAP_LDAP_CLIENT_TLS
+              value: "false" # not handled yet
+            - name: MATTERMOST_LDAP_LDAP_CLIENT_TLS_REQCERT
+              value: "demand"
+            - name: MATTERMOST_LDAP_LDAP_CLIENT_TLS_CA_CRT_FILENAME
+              value: "ca.crt"
+            - name: MATTERMOST_LDAP_LDAP_CLIENT_TLS_CRT_FILENAME
+              value: "cert.crt"
+            - name: MATTERMOST_LDAP_LDAP_CLIENT_TLS_KEY_FILENAME
+              value: "cert.key"
+            - name: MATTERMOST_LDAP_MARIADB_HOST
+              value: "mariadb"
+            - name: MATTERMOST_LDAP_MARIADB_PORT
+              value: "3306"
+            - name: MATTERMOST_LDAP_MARIADB_DATABASE
+              value: "mattermost-ldap"
+            - name: MATTERMOST_LDAP_MARIADB_USER
+              value: "user"
+            - name: MATTERMOST_LDAP_MARIADB_PASSWORD
+              value: "password"
+            - name: MATTERMOST_LDAP_MARIADB_CLIENT_TLS
+              value: "false" # not handled yet
+            - name: MATTERMOST_LDAP_MARIADB_CLIENT_TLS_CA_CRT_FILENAME
+              value: "ca.crt"
+            - name: MATTERMOST_LDAP_MARIADB_CLIENT_TLS_CRT_FILENAME
+              value: "cert.crt"
+            - name: MATTERMOST_LDAP_MARIADB_CLIENT_TLS_KEY_FILENAME
+              value: "cert.key"
+            - name: MATTERMOST_LDAP_HTTPS # disable https for init container
+              value: "false"              # https is set outside of first start 
+
+      containers:
+        - name: mattermost-ldap
+          image: osixia/mattermost-ldap:1.0.0
+          args: ["--copy-service"]
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: container-run-volume
+              mountPath: /container/run
+            - name: ldap-certs-volume
+              mountPath: /container/service/ldap-client/assets/certs
+            - name: database-certs-volume
+              mountPath: /container/service/mariadb-client/assets/certs
+            - name: https-certs-volume
+              mountPath: /container/service/mattermost-ldap/assets/apache2/certs
+          ports:
+            - containerPort: 443
+          env:
+            - name: MATTERMOST_LDAP_BACKUP_CRON_EXP
+              value: "* 4 * * *"
+            - name: MATTERMOST_LDAP_BACKUP_TTL
+              value: "15"
+            - name: MATTERMOST_LDAP_SERVER_ADMIN
+              value: "webmaster@example.com"
+            - name: MATTERMOST_LDAP_SERVER_PATH
+              value: "/mattermost-ldap"
+            - name: MATTERMOST_LDAP_HTTPS
+              value: "true"
+            - name: MATTERMOST_LDAP_HTTPS_CA_CRT_FILENAME
+              value: "ca.crt"
+            - name: MATTERMOST_LDAP_HTTPS_CRT_FILENAME
+              value: "cert.crt"
+            - name: MATTERMOST_LDAP_HTTPS_KEY_FILENAME
+              value: "cert.key"
+
+      volumes:
+        - name: "container-run-volume"
+          emptyDir: {}

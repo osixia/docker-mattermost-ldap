@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+# Usage: /sbin/mattermost-ldap-restore file [file] ...
+backupPath="/data/backup"
+backupDbSuffix="-mattermost-ldap-db.tar.gz"
+databaseFile="database.sql"
+
+for file in "$@"
+do
+    echo "Processing file ${file}"
+    
+    if echo "${file}" | grep -q -e "${backupDbSuffix}"; then
+        echo "Restore mattermost-ldap database"
+        . /container/service/backup/assets/tool/mattermost-ldap-get-db-params
+        
+        rm -rf ${databaseFile} || true
+        tar -xvzf "${backupPath}/${file}"
+        
+        mysql -u "${databaseUser}" -p"${databasePassword}" --host "${host}" --port "${port}" "${database}" < ${databaseFile}
+        
+        rm -rf ${databaseFile}
+        
+        echo "done :)"
+    else
+        echo "Error: Unknown file type"
+    fi
+done

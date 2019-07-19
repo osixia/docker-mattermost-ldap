@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  rules:
+  - host: mattermost.example.com
+    http:
+      paths:
+      - path: /mattermost-ldap
+        backend:
+          serviceName: mattermost-ldap
+          servicePort: 443

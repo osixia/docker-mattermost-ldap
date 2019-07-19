@@ -1,0 +1,19 @@
+MATTERMOST_LDAP_BACKUP_CRON_EXP: 30 4 * * * #every day at 4:30am
+MATTERMOST_LDAP_BACKUP_TTL: 15 # Delete backups that are over 15 days
+
+# Apache
+MATTERMOST_LDAP_SERVER_ADMIN: webmaster@example.org
+MATTERMOST_LDAP_SERVER_PATH: /mattermost-ldap
+
+# Self signed certificat will be generated
+# if MATTERMOST_LDAP_HTTPS is set to true and no certificat and key are provided.
+
+# To use your custom certificat and key 2 options :
+# - add them in service/mattermost-ldap/assets/apache2/ssl and build the image
+# - or during docker run mount a data volume with those files to /container/service/mattermost-ldap/apache2/ssl
+MATTERMOST_LDAP_HTTPS: true
+MATTERMOST_LDAP_HTTPS_CRT_FILENAME: mattermost-ldap.crt
+MATTERMOST_LDAP_HTTPS_KEY_FILENAME: mattermost-ldap.key
+MATTERMOST_LDAP_HTTPS_CA_CRT_FILENAME: ca.crt
+
+MATTERMOST_LDAP_SSL_HELPER_PREFIX: mattermost

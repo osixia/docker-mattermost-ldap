@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+# Usage: /sbin/mattermost-ldap-backup
+backupPath="/data/backup"
+backupDbSuffix="-mattermost-ldap-db.tar.gz"
+databaseFile="database.sql"
+
+source /container/run/environment.sh
+
+# delete backups that are over $MATTERMOST_LDAP_BACKUP_TTL days
+find ${backupPath} -type f -mtime +"${MATTERMOST_LDAP_BACKUP_TTL}" -exec rm {} \;
+
+# date format for the dump file name
+dateFileFormat="+%Y%m%dT%H%M%S"
+
+# backup database
+. /container/service/backup/assets/tool/mattermost-ldap-get-db-params
+rm -rf ${databaseFile} || true
+
+mysqldump -u "${databaseUser}" -p"${databasePassword}" --host "${host}" --port "${port}" "${database}" > ${databaseFile}
+
+backupFilePath="$backupPath/$(date "$dateFileFormat")$backupDbSuffix"
+tar -czf "${backupFilePath}" ${databaseFile}
+chmod 600 "${backupFilePath}"
+
+rm -rf ${databaseFile}

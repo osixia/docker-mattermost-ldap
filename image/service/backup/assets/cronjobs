@@ -1,0 +1,3 @@
+# Backup mail directory
+{{ MATTERMOST_LDAP_BACKUP_CRON_EXP }} root /sbin/mattermost-ldap-backup 2>&1 | /usr/bin/logger -t cron_backup
+# empty line

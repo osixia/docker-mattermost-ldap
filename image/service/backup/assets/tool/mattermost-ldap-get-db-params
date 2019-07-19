@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+# get database name, user and password from configuration
+host=$(sed -n "s/.*db_host\s*=\s*'\(.*\)/\1/p" /var/www/mattermost-ldap/oauth/config_db.php | sed "s/'.*//g")
+port=$(sed -n "s/.*db_port\s*=\s*\(.*\)/\1/p" /var/www/mattermost-ldap/oauth/config_db.php | sed "s/;.*//g")
+database=$(sed -n "s/.*db_name\s*=\s*'\(.*\)/\1/p" /var/www/mattermost-ldap/oauth/config_db.php | sed "s/'.*//g")
+databaseUser=$(sed -n "s/.*db_user\s*=\s*'\(.*\)/\1/p" /var/www/mattermost-ldap/oauth/config_db.php | sed "s/'.*//g")
+databasePassword=$(sed -n "s/.*db_pass\s*=\s*'\(.*\)/\1/p" /var/www/mattermost-ldap/oauth/config_db.php | sed "s/'.*//g")
