@@ -4,7 +4,7 @@
 ![Docker Stars](https://img.shields.io/docker/stars/osixia/mattermost-ldap.svg)
 ![](https://images.microbadger.com/badges/image/osixia/mattermost-ldap.svg)
 
-Latest release: 1.0.0 - Mattermost-LDAP 1.0.0 - [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/osixia/mattermost-ldap/) 
+Latest release: 1.0.1 - Mattermost-LDAP 1.0.1 - [Changelog](CHANGELOG.md) | [Docker Hub](https://hub.docker.com/r/osixia/mattermost-ldap/) 
 
 **A docker image to run Mattermost-LDAP.**
 
@@ -12,29 +12,29 @@ Latest release: 1.0.0 - Mattermost-LDAP 1.0.0 - [Changelog](CHANGELOG.md) | [Doc
 
 
 - [osixia/mattermost-ldap](#osixiamattermost-ldap)
-	- [Contributing](#Contributing)
-	- [Quick Start](#Quick-Start)
-	- [Beginner Guide](#Beginner-Guide)
-		- [TLS](#TLS)
-			- [Use auto-generated certificate](#Use-auto-generated-certificate)
-			- [Use your own certificate](#Use-your-own-certificate)
-			- [Disable TLS](#Disable-TLS)
-		- [Debug](#Debug)
-	- [Environment Variables](#Environment-Variables)
-		- [Default.yaml](#Defaultyaml)
-		- [Default.startup.yaml](#Defaultstartupyaml)
-		- [Set your own environment variables](#Set-your-own-environment-variables)
-			- [Use command line argument](#Use-command-line-argument)
-			- [Link environment file](#Link-environment-file)
-			- [Make your own image or extend this image](#Make-your-own-image-or-extend-this-image)
-	- [Advanced User Guide](#Advanced-User-Guide)
-		- [Extend osixia/mattermost-ldap:1.0.0 image](#Extend-osixiamattermost-ldap100-image)
-		- [Make your own image](#Make-your-own-image)
-		- [Tests](#Tests)
-		- [Kubernetes](#Kubernetes)
-		- [Under the hood: osixia/light-baseimage](#Under-the-hood-osixialight-baseimage)
-	- [Security](#Security)
-	- [Changelog](#Changelog)
+	- [Contributing](#contributing)
+	- [Quick Start](#quick-start)
+	- [Beginner Guide](#beginner-guide)
+		- [TLS](#tls)
+			- [Use auto-generated certificate](#use-auto-generated-certificate)
+			- [Use your own certificate](#use-your-own-certificate)
+			- [Disable TLS](#disable-tls)
+		- [Debug](#debug)
+	- [Environment Variables](#environment-variables)
+		- [Default.yaml](#defaultyaml)
+		- [Default.startup.yaml](#defaultstartupyaml)
+		- [Set your own environment variables](#set-your-own-environment-variables)
+			- [Use command line argument](#use-command-line-argument)
+			- [Link environment file](#link-environment-file)
+			- [Make your own image or extend this image](#make-your-own-image-or-extend-this-image)
+	- [Advanced User Guide](#advanced-user-guide)
+		- [Extend osixia/mattermost-ldap:1.0.1 image](#extend-osixiamattermost-ldap101-image)
+		- [Make your own image](#make-your-own-image)
+		- [Tests](#tests)
+		- [Kubernetes](#kubernetes)
+		- [Under the hood: osixia/light-baseimage](#under-the-hood-osixialight-baseimage)
+	- [Security](#security)
+	- [Changelog](#changelog)
 
 ## Contributing
 
@@ -55,7 +55,7 @@ Take a look at the kubernetes example in **example/kubernetes**
 #### Use auto-generated certificate
 By default, TLS is already configured and enabled, certificate is created using container hostname (it can be set by docker run --hostname option eg: mattermost-ldap.example.org).
 
-	docker run --hostname mattermost-ldap.my-company.com --detach osixia/mattermost-ldap:1.0.0
+	docker run --hostname mattermost-ldap.my-company.com --detach osixia/mattermost-ldap:1.0.1
 
 #### Use your own certificate
 
@@ -65,14 +65,14 @@ You can set your custom certificate at run time, by mounting a directory contain
 	--env MATTERMOST_LDAP_HTTPS_CRT_FILENAME=my-ldap.crt \
 	--env MATTERMOST_LDAP_HTTPS_KEY_FILENAME=my-ldap.key \
 	--env MATTERMOST_LDAP_HTTPS_CA_CRT_FILENAME=the-ca.crt \
-	--detach osixia/mattermost-ldap:1.0.0
+	--detach osixia/mattermost-ldap:1.0.1
 
 Other solutions are available please refer to the [Advanced User Guide](#advanced-user-guide)
 
 #### Disable TLS
 Add --env MATTERMOST_LDAP_HTTPS=false to the run command:
 
-	docker run --env MATTERMOST_LDAP_HTTPS=false --detach osixia/mattermost-ldap:1.0.0
+	docker run --env MATTERMOST_LDAP_HTTPS=false --detach osixia/mattermost-ldap:1.0.1
 
 ### Debug
 
@@ -81,11 +81,11 @@ Available levels are: `none`, `error`, `warning`, `info`, `debug` and `trace`.
 
 Example command to run the container in `debug` mode:
 
-	docker run --detach osixia/mattermost-ldap:1.0.0 --loglevel debug
+	docker run --detach osixia/mattermost-ldap:1.0.1 --loglevel debug
 
 See all command line options:
 
-	docker run osixia/mattermost-ldap:1.0.0 --help
+	docker run osixia/mattermost-ldap:1.0.1 --help
 
 
 ## Environment Variables
@@ -168,7 +168,7 @@ Database tls config (not used for now)
 Environment variables can be set by adding the --env argument in the command line, for example:
 
 	docker run --env LDAP_ORGANISATION="My company" --env LDAP_DOMAIN="my-company.com" \
-	--env LDAP_ADMIN_PASSWORD="JonSn0w" --detach osixia/mattermost-ldap:1.0.0
+	--env LDAP_ADMIN_PASSWORD="JonSn0w" --detach osixia/mattermost-ldap:1.0.1
 
 Be aware that environment variable added in command line will be available at any time
 in the container. In this example if someone manage to open a terminal in this container
@@ -179,14 +179,14 @@ he will be able to read the admin password in clear text from environment variab
 For example if your environment files **my-env.yaml** and **my-env.startup.yaml** are in /data/mattermost-ldap/environment
 
 	docker run --volume /data/mattermost-ldap/environment:/container/environment/01-custom \
-	--detach osixia/mattermost-ldap:1.0.0
+	--detach osixia/mattermost-ldap:1.0.1
 
 Take care to link your environment files folder to `/container/environment/XX-somedir` (with XX < 99 so they will be processed before default environment files) and not  directly to `/container/environment` because this directory contains predefined baseimage environment files to fix container environment (INITRD, LANG, LANGUAGE and LC_CTYPE).
 
 Note: the container will try to delete the **\*.startup.yaml** file after the end of startup files so the file will also be deleted on the docker host. To prevent that : use --volume /data/mattermost-ldap/environment:/container/environment/01-custom**:ro** or set all variables in **\*.yaml** file and don't use **\*.startup.yaml**:
 
 	docker run --volume /data/mattermost-ldap/environment/my-env.yaml:/container/environment/01-custom/env.yaml \
-	--detach osixia/mattermost-ldap:1.0.0
+	--detach osixia/mattermost-ldap:1.0.1
 
 #### Make your own image or extend this image
 
@@ -194,13 +194,13 @@ This is the best solution if you have a private registry. Please refer to the [A
 
 ## Advanced User Guide
 
-### Extend osixia/mattermost-ldap:1.0.0 image
+### Extend osixia/mattermost-ldap:1.0.1 image
 
 If you need to add your custom TLS certificate, bootstrap config or environment files the easiest way is to extends this image.
 
 Dockerfile example:
 
-	FROM osixia/mattermost-ldap:1.0.0
+	FROM osixia/mattermost-ldap:1.0.1
 
 	ADD certs /container/service/mattermost-ldap/assets/apache2/certs
 	ADD environment /container/environment/01-custom
@@ -234,7 +234,7 @@ Build your image:
 
 Run your image:
 
-	docker run --detach cool-guy/mattermost-ldap:1.0.0
+	docker run --detach cool-guy/mattermost-ldap:1.0.1
 
 ### Tests
 

@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: mattermost-ldap-init
-          image: osixia/mattermost-ldap:1.0.0
+          image: osixia/mattermost-ldap:1.0.1
           args: ["--copy-service", "-p"] # do not run process
           volumeMounts:
             - name: container-run-volume
@@ -84,7 +84,7 @@ spec:
 
       containers:
         - name: mattermost-ldap
-          image: osixia/mattermost-ldap:1.0.0
+          image: osixia/mattermost-ldap:1.0.1
           args: ["--copy-service"]
           imagePullPolicy: Always
           volumeMounts:
