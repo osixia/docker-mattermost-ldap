@@ -1,8 +1,8 @@
 FROM osixia/web-baseimage:1.2.0
 
 # mattermost-ldap version
-ARG MATTERMOST_LDAP_VERSION=1.0
-ARG MATTERMOST_LDAP_GIT_REPO=https://github.com/Crivaledaz/Mattermost-LDAP.git
+ARG MATTERMOST_LDAP_VERSION=1.0.1
+ARG MATTERMOST_LDAP_GIT_REPO=https://github.com/osixia/Mattermost-LDAP.git
 
 # MariaDB version
 ARG MARIADB_MAJOR=10.3
